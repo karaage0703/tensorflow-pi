@@ -20,6 +20,7 @@ Useful tools for using tensorflow easily on Mac/Linux(including Raspberry Pi)
 
 ## Clone this repository
 ```sh
+$ cd
 $ git clone https://github.com/karaage0703/tensorflow_pi
 $ cd tensorflow_pi
 ```
@@ -39,41 +40,47 @@ tensorflow-pi
 ```
 
 #### Increase data
-Then increase data(mirror, rotate,...) if you need:
+Then increase data(mirror, rotate,...) if you need.
+
+If you would like to increase panda photo, execute following commands:
+```sh
+$ cd ~/tensorflow_pi/data/image_dir/panda
+$ ../../increase_picture-all.sh
+```
 
 
 #### Make label data
 Execute following commands for making label data:
 ```sh
-$ cd data
+$ cd ~/tensorflow_pi/data
 $ python make_train_data.py image_dir
 ```
 
-### Change CLASS NUMBER
-```sh
-$ vim cnn.py
-```
+This commands display number of class.
 
-change class number
+Modify `NUM_CLASSES` of `cnn.py`
+
 ## Train
-
+Execute following command:
 ```sh
+$ cd ~/tensorflow_pi
 $ python train.py
 ```
 
 ## Test
 ```sh
+$ cd ~/tensorflow_pi
 $ python test.py <imagefilename>
 ```
 
 ex:
 
 ```sh
-$ python cnn_test.py flower.py
+$ python test.py panda.jpg
 ```
 
 ```
-flower
+panda
 ```
 
 

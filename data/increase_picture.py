@@ -84,7 +84,7 @@ if __name__ == '__main__':
     # その他LUT作成
     for i in range(256):
         LUT_LC[i] = min_table + i * (diff_table) / 255
-        LUT_G1[i] = 255 * pow(float(i) / 255, 1.0 / gamma1) 
+        LUT_G1[i] = 255 * pow(float(i) / 255, 1.0 / gamma1)
         LUT_G2[i] = 255 * pow(float(i) / 255, 1.0 / gamma2)
 
     LUTs.append(LUT_HC)
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     # 画像の読み込み
     img_src = cv2.imread(sys.argv[1], 1)
     trans_img = []
-    trans_img.append(img_src)
+    # trans_img.append(img_src)
 
     # LUT変換
     for i, LUT in enumerate(LUTs):
@@ -117,14 +117,14 @@ if __name__ == '__main__':
         flip_img.append(cv2.flip(img, 1))
     trans_img.extend(flip_img)
 
-    # 保存
-    if not os.path.exists("trans_images"):
-        os.mkdir("trans_images")
+    # make directory
+    # if not os.path.exists("trans_images"):
+        # os.mkdir("trans_images")
 
     base =  os.path.splitext(os.path.basename(sys.argv[1]))[0] + "_"
     img_src.astype(np.float64)
     for i, img in enumerate(trans_img):
         # 比較用
         # cv2.imwrite("trans_images/" + base + str(i) + ".jpg" ,cv2.hconcat([img_src.astype(np.float64), img.astype(np.float64)]))
-        cv2.imwrite("trans_images/" + base + str(i) + ".jpg" ,img)
+        cv2.imwrite("trans_" + base + str(i) + ".jpg" ,img)
 
