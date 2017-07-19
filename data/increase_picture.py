@@ -95,7 +95,7 @@ if __name__ == '__main__':
     # 画像の読み込み
     img_src = cv2.imread(sys.argv[1], 1)
     trans_img = []
-    # trans_img.append(img_src)
+    trans_img.append(img_src)
 
     # LUT変換
     for i, LUT in enumerate(LUTs):
@@ -124,7 +124,8 @@ if __name__ == '__main__':
     base =  os.path.splitext(os.path.basename(sys.argv[1]))[0] + "_"
     img_src.astype(np.float64)
     for i, img in enumerate(trans_img):
-        # 比較用
-        # cv2.imwrite("trans_images/" + base + str(i) + ".jpg" ,cv2.hconcat([img_src.astype(np.float64), img.astype(np.float64)]))
-        cv2.imwrite("trans_" + base + str(i) + ".jpg" ,img)
+        if i > 0:
+            # 比較用
+            # cv2.imwrite("trans_images/" + base + str(i) + ".jpg" ,cv2.hconcat([img_src.astype(np.float64), img.astype(np.float64)]))
+            cv2.imwrite("trans_" + base + str(i-1) + ".jpg" ,img)
 
