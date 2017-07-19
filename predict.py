@@ -9,6 +9,11 @@ import cv2
 import cnn as nn
 
 if __name__ == '__main__':
+    labels = []
+    f = open('/tmp/tensorflow_pi/labels.txt', 'r')
+    for line in f:
+        labels.append(line.rstrip())
+
     test_image = []
     for i in range(1, len(sys.argv)):
         img = cv2.imread(sys.argv[i])
@@ -31,4 +36,4 @@ if __name__ == '__main__':
         pred = np.argmax(logits.eval(feed_dict={ 
             images_placeholder: [test_image[i]],
             keep_prob: 1.0 })[0])
-        print pred
+        print(labels[pred])
