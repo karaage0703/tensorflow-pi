@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
+import time
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -14,7 +15,7 @@ flags.DEFINE_string('train_dir', '/tmp/tensorflow_pi/train_data', 'Directory to 
 flags.DEFINE_integer('max_steps', 200, 'Number of steps to run trainer.')
 flags.DEFINE_integer('batch_size', 10, 'Batch size'
                      'Must divide evenly into the dataset sizes.')
-flags.DEFINE_float('learning_rate', 1e-4, 'Initial learning rate.')
+flags.DEFINE_float('learning_rate', 1e-5, 'Initial learning rate.')
 
 if __name__ == '__main__':
     # open file
@@ -57,6 +58,8 @@ if __name__ == '__main__':
     test_label = np.asarray(test_label)
     f.close()
 
+    start = time.time()
+
     with tf.Graph().as_default():
         # image tensor
         images_placeholder = tf.placeholder("float", shape=(None, nn.IMAGE_PIXELS))
@@ -74,7 +77,7 @@ if __name__ == '__main__':
         sess = tf.Session()
         sess.run(tf.global_variables_initializer())
         summary_op = tf.summary.merge_all()
-        summary_writer = tf.summary.FileWriter(FLAGS.train_dir, sess.graph_def)
+        summary_writer = tf.summary.FileWriter(FLAGS.train_dir, sess.graph)
 
         # train
         for step in range(FLAGS.max_steps):
@@ -89,7 +92,12 @@ if __name__ == '__main__':
                 images_placeholder: train_image,
                 labels_placeholder: train_label,
                 keep_prob: 1.0})
-            print "step %d, training accuracy %g"%(step, train_accuracy)
+            train_loss = sess.run(loss_value, feed_dict={
+                images_placeholder: train_image,
+                labels_placeholder: train_label,
+                keep_prob: 1.0})
+
+            print("step %d, training accuracy %g, loss %g"%(step, train_accuracy, train_loss))
 
             summary_str = sess.run(summary_op, feed_dict={
                 images_placeholder: train_image,
@@ -97,10 +105,13 @@ if __name__ == '__main__':
                 keep_prob: 1.0})
             summary_writer.add_summary(summary_str, step)
 
-    print "test accuracy %g"%sess.run(acc, feed_dict={
+    elapsed_time = time.time() - start
+    print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+
+    print("test accuracy %g"%sess.run(acc, feed_dict={
         images_placeholder: test_image,
         labels_placeholder: test_label,
-        keep_prob: 1.0})
+        keep_prob: 1.0}))
 
     # save model
     save_path = saver.save(sess, "model.ckpt")
