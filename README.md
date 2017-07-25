@@ -61,28 +61,43 @@ This commands display number of class.
 Modify `NUM_CLASSES` of `cnn.py`
 
 ## Train
-Execute following command:
+Execute following commands for train:
 ```sh
 $ cd ~/tensorflow_pi
 $ python train.py
 ```
 
 ## Test
+Execute following commands for test:
 ```sh
 $ cd ~/tensorflow_pi
-$ python test.py <imagefilename>
+$ python predict.py <imagefilename>
 ```
 
 ex:
-
 ```sh
-$ python test.py panda.jpg
+$ python predict.py giantpanda.jpg
 ```
 
 ```
 panda
 ```
 
+## Visualization(Tensor Board)
+Execute following commnads after train:
+```sh
+$ tensorboard --logdir=/tmp/tensorflow_pi/
+```
+
+Then access raspberry pi. Check your ip adress by executing `ifconfig` command. And access following address.
+```
+<ip address>:6006
+```
+
+For example
+```
+192.168.0.10:6006
+```
 
 # License
 This software is released under the MIT License, see LICENSE.
