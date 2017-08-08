@@ -86,7 +86,7 @@ panda
 ## Visualization(Tensor Board)
 Execute following commnads after train:
 ```sh
-$ tensorboard --logdir=/tmp/tensorflow-pi/
+$ tensorboard --logdir=/tmp/tensorflow_pi/
 ```
 
 Then access raspberry pi. Check your ip adress by executing `ifconfig` command. And access following address.
