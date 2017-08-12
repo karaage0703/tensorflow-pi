@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
+import os
+import csv
 import time
 import cv2
 import numpy as np
@@ -21,6 +23,12 @@ if __name__ == '__main__':
     # open file
     f = open(FLAGS.train, 'r')
     print(FLAGS.train)
+
+    # prepare backup dir
+    backup_dir = os.path.dirname(os.path.abspath(__file__)) + "/data/model"
+    if not os.path.exists(backup_dir):
+        os.makedirs(backup_dir)
+
     # initialize
     train_image = []
     train_label = []
@@ -59,6 +67,13 @@ if __name__ == '__main__':
     f.close()
 
     start = time.time()
+
+    # graph data
+    csvlist = []
+    csvlist.append([])
+    csvlist[0].append("step")
+    csvlist[0].append("accuracy")
+    csvlist[0].append("loss")
 
     with tf.Graph().as_default():
         # image tensor
@@ -99,6 +114,12 @@ if __name__ == '__main__':
 
             print("step %d, training accuracy %g, loss %g"%(step, train_accuracy, train_loss))
 
+            # add csv list for graph
+            csvlist.append([])
+            csvlist[step+1].append(step)
+            csvlist[step+1].append(train_accuracy)
+            csvlist[step+1].append(train_loss)
+
             summary_str = sess.run(summary_op, feed_dict={
                 images_placeholder: train_image,
                 labels_placeholder: train_label,
@@ -114,4 +135,10 @@ if __name__ == '__main__':
         keep_prob: 1.0}))
 
     # save model
-    save_path = saver.save(sess, "model.ckpt")
+    save_path = saver.save(sess, backup_dir + "/model.ckpt")
+
+    # save graph data(csv)
+    f = open('/tmp/tensorflow_pi/train_graph.csv', 'w')
+    dataWriter = csv.writer(f)
+    dataWriter.writerows(csvlist)
+    f.close()

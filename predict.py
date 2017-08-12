@@ -2,6 +2,7 @@
 #! -*- coding: utf-8 -*-
 
 import sys
+import os
 import numpy as np
 import tensorflow as tf
 import cv2
@@ -10,7 +11,8 @@ import cnn as nn
 
 if __name__ == '__main__':
     labels = []
-    f = open('/tmp/tensorflow_pi/labels.txt', 'r')
+    backup_dir = os.path.dirname(os.path.abspath(__file__)) + "/data/model"
+    f = open(backup_dir + '/labels.txt', 'r')
     for line in f:
         labels.append(line.rstrip())
 
@@ -30,7 +32,7 @@ if __name__ == '__main__':
 
     saver = tf.train.Saver()
     sess.run(tf.global_variables_initializer())
-    saver.restore(sess, "model.ckpt")
+    saver.restore(sess, backup_dir + "/model.ckpt")
 
     for i in range(len(test_image)):
         pred = np.argmax(logits.eval(feed_dict={ 
